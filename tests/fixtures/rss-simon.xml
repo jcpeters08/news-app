@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Simon Willison</title>
+  <link href="https://simonwillison.net/"/>
+  <entry>
+    <title>Useful Claude prompting techniques for code review</title>
+    <link rel="alternate" href="https://simonwillison.net/2026/Apr/24/claude-code-review/"/>
+    <published>REPLACE_NOW</published>
+    <summary>Some patterns I've found useful when using Claude for code review.</summary>
+  </entry>
+</feed>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Anthropic News</title>
+    <link>https://www.anthropic.com/news</link>
+    <description>News from Anthropic</description>
+    <item>
+      <title>Claude Opus 4.7 with 1M context now generally available</title>
+      <link>https://www.anthropic.com/news/claude-opus-4-7</link>
+      <description>Today we're announcing Claude Opus 4.7 with extended context.</description>
+      <pubDate>REPLACE_NOW</pubDate>
+    </item>
+    <item>
+      <title>Building agents with Claude Code: tips for advanced users</title>
+      <link>https://www.anthropic.com/news/claude-code-tips</link>
+      <description>Hooks, slash commands, and MCP best practices.</description>
+      <pubDate>REPLACE_NOW</pubDate>
+    </item>
+  </channel>
+</rss>

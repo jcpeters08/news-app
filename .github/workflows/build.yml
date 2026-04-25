@@ -1,0 +1,63 @@
+name: Build & Deploy
+
+# Cron runs more often than needed; the build script (shouldRun) gates on
+# exact local time in America/Chicago (6am or 1pm) and exits cleanly otherwise.
+# This is DST-safe year-round without juggling separate cron entries.
+#
+# UTC times covered:
+#   11:00 UTC = 6am CDT (Mar–Nov) — RUN
+#   12:00 UTC = 6am CST (Nov–Mar) — RUN
+#   18:00 UTC = 1pm CDT (Mar–Nov) — RUN
+#   19:00 UTC = 1pm CST (Nov–Mar) — RUN
+on:
+  schedule:
+    - cron: '0 11,12,18,19 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force run regardless of time gate'
+        required: false
+        default: 'true'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: build-deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Generate data.json
+        env:
+          NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
+          FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.force == 'true' && '1' || '' }}
+        run: npm run build:data
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

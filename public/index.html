@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d12" />
+  <title>Daily Brief</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>Daily Brief</h1>
+    <div class="meta" id="meta">Loading…</div>
+  </header>
+
+  <main class="grid" id="dashboard">
+    <section class="weather" id="weather" aria-label="Weather">
+      <h2 class="visually-hidden">Weather</h2>
+      <div class="weather-cards" id="weather-cards"></div>
+    </section>
+
+    <section class="col" data-cat="politics" aria-labelledby="h-politics">
+      <h2 id="h-politics">Politics</h2>
+      <ul class="stories" id="politics"></ul>
+    </section>
+
+    <section class="col" data-cat="medicineTech" aria-labelledby="h-medtech">
+      <h2 id="h-medtech">Medicine &amp; Tech</h2>
+      <ul class="stories" id="medicineTech"></ul>
+    </section>
+
+    <section class="col" data-cat="genai" aria-labelledby="h-genai">
+      <h2 id="h-genai">GenAI · Claude &amp; ChatGPT</h2>
+      <ul class="stories" id="genai"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>News from a balanced mix of sources. Lean ratings adapted from <a href="https://www.allsides.com/media-bias/ratings" target="_blank" rel="noopener">AllSides</a>. Weather from <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

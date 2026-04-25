@@ -1,0 +1,55 @@
+{
+  "status": "ok",
+  "totalResults": 5,
+  "articles": [
+    {
+      "source": { "id": "reuters", "name": "Reuters" },
+      "title": "Senate passes bipartisan infrastructure bill in 68-32 vote",
+      "description": "Lawmakers approved sweeping legislation on Thursday.",
+      "url": "https://reuters.example.com/a",
+      "publishedAt": "REPLACE_NOW"
+    },
+    {
+      "source": { "id": "fox-news", "name": "Fox News" },
+      "title": "Border policy debate intensifies in House committee hearing",
+      "description": "Witnesses testified across the political spectrum.",
+      "url": "https://foxnews.example.com/b",
+      "publishedAt": "REPLACE_NOW"
+    },
+    {
+      "source": { "id": "the-new-york-times", "name": "The New York Times" },
+      "title": "Climate ruling reshapes federal regulatory authority",
+      "description": "Justices issued a 5-4 decision Tuesday.",
+      "url": "https://nyt.example.com/c",
+      "publishedAt": "REPLACE_NOW"
+    },
+    {
+      "source": { "id": "msnbc", "name": "MSNBC" },
+      "title": "Voting rights bill faces uncertain Senate path",
+      "description": "Negotiations continue behind closed doors.",
+      "url": "https://msnbc.example.com/d",
+      "publishedAt": "REPLACE_NOW"
+    },
+    {
+      "source": { "id": "national-review", "name": "National Review" },
+      "title": "Tax reform proposal draws scrutiny from economists",
+      "description": "Analysts question revenue projections.",
+      "url": "https://nr.example.com/e",
+      "publishedAt": "REPLACE_NOW"
+    },
+    {
+      "source": { "id": "the-new-york-times", "name": "The New York Times" },
+      "title": "Climate ruling reshapes federal regulatory authority",
+      "description": "Duplicate to test dedup.",
+      "url": "https://nyt.example.com/c-dup",
+      "publishedAt": "REPLACE_NOW"
+    },
+    {
+      "source": { "id": "reuters", "name": "Reuters" },
+      "title": "Old story that should be filtered",
+      "description": "Too old.",
+      "url": "https://reuters.example.com/old",
+      "publishedAt": "2020-01-01T00:00:00Z"
+    }
+  ]
+}

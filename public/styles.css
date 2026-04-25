@@ -1,0 +1,230 @@
+:root {
+  --bg: #0b0d12;
+  --bg-elev: #141821;
+  --bg-elev-2: #1c2230;
+  --text: #e9ecf1;
+  --text-dim: #9aa3b2;
+  --text-faint: #6b7280;
+  --accent: #7aa2ff;
+  --border: #232a3a;
+  --bias-left: #5b8bff;
+  --bias-lean-left: #7eb2ff;
+  --bias-center: #b8a86e;
+  --bias-lean-right: #ff9c8a;
+  --bias-right: #ff6f5e;
+  --shadow: 0 1px 3px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.25);
+  font-synthesis: none;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f8fa;
+    --bg-elev: #ffffff;
+    --bg-elev-2: #ffffff;
+    --text: #15181f;
+    --text-dim: #4b5563;
+    --text-faint: #6b7280;
+    --accent: #2856d6;
+    --border: #e5e7eb;
+    --shadow: 0 1px 2px rgba(15,23,42,.06), 0 4px 12px rgba(15,23,42,.05);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.visually-hidden {
+  position: absolute; clip: rect(0 0 0 0); width: 1px; height: 1px; overflow: hidden;
+}
+
+.header {
+  padding: 24px 20px 12px;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.meta {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.grid {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 8px 20px 32px;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "weather"
+    "politics"
+    "medicineTech"
+    "genai";
+}
+
+.weather { grid-area: weather; }
+[data-cat="politics"] { grid-area: politics; }
+[data-cat="medicineTech"] { grid-area: medicineTech; }
+[data-cat="genai"] { grid-area: genai; }
+
+.weather-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.weather-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 14px;
+  align-items: center;
+}
+
+.weather-card .icon { font-size: 36px; line-height: 1; }
+.weather-card .city { font-weight: 600; font-size: 14px; color: var(--text-dim); margin: 0; }
+.weather-card .temp { font-size: 28px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.1; }
+.weather-card .cond { font-size: 13px; color: var(--text-dim); }
+.weather-card .extras {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+
+.col {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+
+.col h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.stories {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.story {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.story-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.story-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.story-source { color: var(--text-dim); font-weight: 500; }
+
+.bias {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  line-height: 1.3;
+}
+.bias-left { color: var(--bias-left); }
+.bias-lean-left { color: var(--bias-lean-left); }
+.bias-center { color: var(--bias-center); }
+.bias-lean-right { color: var(--bias-lean-right); }
+.bias-right { color: var(--bias-right); }
+
+.empty, .error {
+  font-size: 13px;
+  color: var(--text-faint);
+  font-style: italic;
+}
+.error { color: var(--bias-right); font-style: normal; }
+
+.footer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 8px 20px 32px;
+  font-size: 12px;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+/* Tablet: 2-column news, weather strip on top */
+@media (min-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "weather weather"
+      "politics medicineTech"
+      "genai genai";
+  }
+}
+
+/* Desktop: 3-column news, weather strip on top */
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+      "weather weather weather"
+      "politics medicineTech genai";
+  }
+  .weather-cards { grid-template-columns: 1fr 1fr; max-width: 800px; }
+  .header h1 { font-size: 32px; }
+}
