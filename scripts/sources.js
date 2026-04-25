@@ -60,21 +60,20 @@ export const SOURCE_BIAS = {
   'the-blaze': BIAS.RIGHT,
 };
 
-// Tech/medicine outlets — used for the medicine-tech category, not lean-rated for politics.
+// Tech/medicine outlets — used for the medicine-tech category.
+// Trimmed to outlets that primarily cover tech/science/medicine, not general news.
 export const TECH_MED_SOURCES = [
-  'reuters',
-  'associated-press',
-  'bbc-news',
   'the-verge',
   'ars-technica',
   'wired',
   'techcrunch',
+  'engadget',
+  'recode',
+  'hacker-news',
   'medical-news-today',
   'new-scientist',
   'national-geographic',
-  'bloomberg',
-  'cnn',
-  'nbc-news',
+  'next-big-future',
 ];
 
 export const POLITICS_SOURCES = Object.keys(SOURCE_BIAS);

@@ -78,7 +78,7 @@ describe('fetchCategory (mocked fetch)', () => {
       .rejects.toThrow(/NEWSAPI_KEY/);
   });
 
-  it('hits the right URL and returns transformed stories', async () => {
+  it('politics hits top-headlines with sources and no category param', async () => {
     const now = new Date();
     const fx = await loadFixture('newsapi-politics.json', now);
     let calledUrl;
@@ -91,7 +91,26 @@ describe('fetchCategory (mocked fetch)', () => {
     });
     expect(calledUrl).toContain('newsapi.org/v2/top-headlines');
     expect(calledUrl).toContain('apiKey=fake');
+    expect(calledUrl).toContain('sources=');
+    // Critical: NewsAPI rejects sources+category combo with 400.
+    expect(calledUrl).not.toContain('category=');
     expect(stories.length).toBeGreaterThan(0);
+  });
+
+  it('medicine_tech uses everything endpoint with topic query', async () => {
+    const now = new Date();
+    let calledUrl;
+    const fakeFetch = async (url) => {
+      calledUrl = url;
+      return { ok: true, json: async () => ({ status: 'ok', articles: [] }) };
+    };
+    await fetchCategory({
+      category: 'medicine_tech', apiKey: 'fake', fetchImpl: fakeFetch, now,
+    });
+    expect(calledUrl).toContain('newsapi.org/v2/everything');
+    expect(calledUrl).toContain('sortBy=publishedAt');
+    expect(calledUrl).toMatch(/q=.*technology/i);
+    expect(calledUrl).toContain('from=');
   });
 
   it('throws on non-200', async () => {

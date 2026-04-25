@@ -1,17 +1,17 @@
 import { SOURCE_BIAS, BIAS_LABEL, POLITICS_SOURCES, TECH_MED_SOURCES } from './sources.js';
 
-const NEWSAPI = 'https://newsapi.org/v2/top-headlines';
-const PAGE_SIZE = 30;
+const TOP_HEADLINES = 'https://newsapi.org/v2/top-headlines';
+const EVERYTHING = 'https://newsapi.org/v2/everything';
+const PAGE_SIZE = 50;
 
+// NewsAPI quirk: top-headlines accepts `sources` OR (`category`+`country`),
+// not both. We use top-headlines+sources for politics (broad daily news),
+// and `everything`+keyword query for medicine/tech (topic-targeted).
 export async function fetchCategory({ category, apiKey, fetchImpl = fetch, now = new Date() }) {
   if (!apiKey) throw new Error('NEWSAPI_KEY missing');
-
-  const sources = category === 'politics' ? POLITICS_SOURCES : TECH_MED_SOURCES;
-  const url = new URL(NEWSAPI);
-  url.searchParams.set('sources', sources.join(','));
-  url.searchParams.set('pageSize', String(PAGE_SIZE));
-  if (category === 'politics') url.searchParams.set('category', 'general');
-  url.searchParams.set('apiKey', apiKey);
+  const url = category === 'politics'
+    ? buildPoliticsUrl(apiKey)
+    : buildMedTechUrl(apiKey, now);
 
   const res = await fetchImpl(url.toString());
   if (!res.ok) {
@@ -22,6 +22,30 @@ export async function fetchCategory({ category, apiKey, fetchImpl = fetch, now =
     throw new Error(`NewsAPI ${category} status: ${json.status} - ${json.message || ''}`);
   }
   return transformStories(json.articles || [], category, now);
+}
+
+function buildPoliticsUrl(apiKey) {
+  const url = new URL(TOP_HEADLINES);
+  url.searchParams.set('sources', POLITICS_SOURCES.join(','));
+  url.searchParams.set('pageSize', String(PAGE_SIZE));
+  url.searchParams.set('apiKey', apiKey);
+  return url;
+}
+
+function buildMedTechUrl(apiKey, now) {
+  const url = new URL(EVERYTHING);
+  url.searchParams.set('sources', TECH_MED_SOURCES.join(','));
+  // Boolean OR query targeting medicine, tech, science, AI topics.
+  url.searchParams.set('q',
+    '(technology OR AI OR "artificial intelligence" OR medicine OR health OR science OR research OR biotech)');
+  url.searchParams.set('language', 'en');
+  url.searchParams.set('sortBy', 'publishedAt');
+  url.searchParams.set('pageSize', String(PAGE_SIZE));
+  // Last 36h, matches transform filter.
+  const from = new Date(now.getTime() - 36 * 3600 * 1000).toISOString();
+  url.searchParams.set('from', from);
+  url.searchParams.set('apiKey', apiKey);
+  return url;
 }
 
 export function transformStories(articles, category, now = new Date()) {
