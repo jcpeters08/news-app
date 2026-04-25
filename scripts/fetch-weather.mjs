@@ -17,6 +17,8 @@ export const CITIES = [
   },
 ];
 
+const FORECAST_DAYS = 7;
+
 export async function fetchWeather({ city, fetchImpl = fetch }) {
   const url = new URL('https://api.open-meteo.com/v1/forecast');
   url.searchParams.set('latitude', String(city.lat));
@@ -27,7 +29,7 @@ export async function fetchWeather({ city, fetchImpl = fetch }) {
   url.searchParams.set('wind_speed_unit', 'mph');
   url.searchParams.set('precipitation_unit', 'inch');
   url.searchParams.set('timezone', city.timezone);
-  url.searchParams.set('forecast_days', '1');
+  url.searchParams.set('forecast_days', String(FORECAST_DAYS));
 
   const res = await fetchImpl(url.toString());
   if (!res.ok) throw new Error(`Open-Meteo ${city.id} failed: ${res.status}`);
@@ -38,6 +40,18 @@ export async function fetchWeather({ city, fetchImpl = fetch }) {
 export function transformWeather(json, city) {
   const cur = json.current || {};
   const d = json.daily || {};
+  const days = (d.time || []).map((dateStr, i) => ({
+    date: dateStr,
+    dow: dayOfWeek(dateStr, city.timezone),
+    highF: round(d.temperature_2m_max?.[i]),
+    lowF: round(d.temperature_2m_min?.[i]),
+    precipChance: d.precipitation_probability_max?.[i] ?? null,
+    code: d.weather_code?.[i] ?? null,
+    condition: weatherCodeToText(d.weather_code?.[i]),
+    icon: weatherCodeToIcon(d.weather_code?.[i], true),
+    sunrise: d.sunrise?.[i] || null,
+    sunset: d.sunset?.[i] || null,
+  }));
   return {
     cityId: city.id,
     cityName: city.name,
@@ -52,16 +66,16 @@ export function transformWeather(json, city) {
       condition: weatherCodeToText(cur.weather_code),
       icon: weatherCodeToIcon(cur.weather_code, cur.is_day === 1),
     },
-    today: {
-      highF: round(d.temperature_2m_max?.[0]),
-      lowF: round(d.temperature_2m_min?.[0]),
-      precipChance: d.precipitation_probability_max?.[0] ?? null,
-      sunrise: d.sunrise?.[0] || null,
-      sunset: d.sunset?.[0] || null,
-      condition: weatherCodeToText(d.weather_code?.[0]),
-      icon: weatherCodeToIcon(d.weather_code?.[0], true),
-    },
+    today: days[0] || null,
+    forecast: days, // index 0 = today, 1..6 = next 6 days
   };
+}
+
+function dayOfWeek(dateStr, timezone) {
+  // dateStr from Open-Meteo daily is "YYYY-MM-DD" already in city's timezone.
+  // Use UTC noon to avoid edge cases when converting to a Date object.
+  const d = new Date(dateStr + 'T12:00:00Z');
+  return new Intl.DateTimeFormat('en-US', { weekday: 'short', timeZone: 'UTC' }).format(d);
 }
 
 function round(n) {

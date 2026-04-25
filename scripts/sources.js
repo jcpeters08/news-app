@@ -79,17 +79,18 @@ export const TECH_MED_SOURCES = [
 export const POLITICS_SOURCES = Object.keys(SOURCE_BIAS);
 
 // Curated RSS feeds for the GenAI section — focused on advanced Claude/ChatGPT users.
-// Comments note why each source is here.
+// Weights prioritize practitioner / tip-style sources over pure announcement feeds.
+// Final ranking also applies a tip-keyword boost (see fetch-genai.mjs).
 export const GENAI_FEEDS = [
-  // Anthropic — Claude announcements & engineering deep dives
-  { url: 'https://www.anthropic.com/news/rss.xml', source: 'Anthropic', weight: 10 },
+  // Simon Willison — most consistently practical advanced tips & techniques
+  { url: 'https://simonwillison.net/atom/everything/', source: 'Simon Willison', weight: 12 },
+  // Anthropic — Claude announcements + engineering posts
+  { url: 'https://www.anthropic.com/news/rss.xml', source: 'Anthropic', weight: 9 },
   // OpenAI — ChatGPT/API announcements
-  { url: 'https://openai.com/blog/rss.xml', source: 'OpenAI', weight: 10 },
-  // Simon Willison — tips, deep dives, advanced usage
-  { url: 'https://simonwillison.net/atom/everything/', source: 'Simon Willison', weight: 9 },
+  { url: 'https://openai.com/blog/rss.xml', source: 'OpenAI', weight: 8 },
   // Latent Space — practitioner-focused podcast/blog
-  { url: 'https://www.latent.space/feed', source: 'Latent Space', weight: 7 },
-  // Hacker News — front page; we'll filter for Claude/ChatGPT/LLM keywords
+  { url: 'https://www.latent.space/feed', source: 'Latent Space', weight: 9 },
+  // Hacker News — filtered for Claude/ChatGPT/LLM, tip-boost re-ranks tutorials up
   { url: 'https://hnrss.org/frontpage', source: 'Hacker News', weight: 5, filterKeywords: true },
 ];
 

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { fetchGenAI, parseFeed, hasKeyword, pickTopGenAI } from '../scripts/fetch-genai.mjs';
+import { fetchGenAI, parseFeed, hasKeyword, pickTopGenAI, tipScore } from '../scripts/fetch-genai.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -72,6 +72,36 @@ describe('fetchGenAI (mocked)', () => {
     });
     expect(items.length).toBe(1);
     expect(items[0].title).toContain('Claude');
+  });
+});
+
+describe('tipScore', () => {
+  it('boosts tutorial/how-to language', () => {
+    expect(tipScore('How to use Claude for code review')).toBeGreaterThan(0);
+    expect(tipScore('A tutorial on prompt engineering')).toBeGreaterThan(0);
+  });
+  it('de-ranks pure announcement language', () => {
+    expect(tipScore('Introducing GPT-5.5')).toBeLessThan(0);
+    expect(tipScore('Now available: Claude Opus')).toBeLessThan(0);
+  });
+  it('returns 0 for neutral text', () => {
+    expect(tipScore('Stock market news today')).toBe(0);
+  });
+});
+
+describe('fetchGenAI ranks tip content above announcements', () => {
+  it('a tip post outranks an announcement when same weight & recency', async () => {
+    const now = new Date();
+    const xml = `<?xml version="1.0"?><rss version="2.0"><channel>
+      <item><title>Introducing GPT-5.5</title><description>Now available.</description><link>https://x/announce</link><pubDate>${now.toUTCString()}</pubDate></item>
+      <item><title>How to use Claude for advanced code review</title><description>Tutorial on prompting.</description><link>https://x/tip</link><pubDate>${now.toUTCString()}</pubDate></item>
+    </channel></rss>`;
+    const fakeFetch = async () => ({ ok: true, text: async () => xml });
+    const items = await fetchGenAI({
+      fetchImpl: fakeFetch, now,
+      feeds: [{ url: 'https://x.test/rss', source: 'Mixed', weight: 5 }],
+    });
+    expect(items[0].url).toBe('https://x/tip');
   });
 });
 

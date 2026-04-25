@@ -38,11 +38,32 @@ export async function fetchGenAI({ fetchImpl = fetch, now = new Date(), feeds = 
       url: i.url,
       source: i.source,
       publishedAt: i.publishedAt,
-      description: stripHtml(i.description || '').slice(0, 240),
+      description: stripHtml(i.description || '').slice(0, 360),
       category: 'genai',
       _score: scoreItem(i, now),
     }))
     .sort((a, b) => b._score - a._score);
+}
+
+// Heuristic boost for posts that read like tips/tutorials/practitioner content,
+// and a small de-rank for pure announcement-style posts. The user wants
+// "how it's helpful" content for advanced Claude/ChatGPT users.
+const TIP_BOOST_TERMS = [
+  'how to', 'how i', 'tutorial', 'guide', 'tips', 'tricks', 'trick', 'technique',
+  'pattern', 'workflow', 'recipe', 'best practice', 'deep dive', 'hands-on',
+  'in practice', 'lessons', 'cookbook', 'walkthrough', 'mastering', 'advanced',
+  'use case', 'prompt engineering', 'prompting', 'building with', 'i built',
+];
+const ANNOUNCE_DERANK_TERMS = [
+  'introducing', 'announcing', 'now available', 'general availability',
+  'we\'re excited', 'changelog', 'system card', 'model card',
+];
+export function tipScore(text) {
+  const lower = text.toLowerCase();
+  let score = 0;
+  for (const t of TIP_BOOST_TERMS) if (lower.includes(t)) score += 30;
+  for (const t of ANNOUNCE_DERANK_TERMS) if (lower.includes(t)) score -= 15;
+  return score;
 }
 
 export function parseFeed(xml) {
@@ -105,10 +126,11 @@ export function hasKeyword(text) {
 }
 
 function scoreItem(item, now) {
-  // weight + recency boost
+  // weight + recency + tip-content boost.
   const ageHours = (now.getTime() - new Date(item.publishedAt).getTime()) / (3600 * 1000);
   const recency = Math.max(0, 100 - ageHours); // newer = higher
-  return item.weight * 10 + recency;
+  const tip = tipScore(item.title + ' ' + (item.description || ''));
+  return item.weight * 10 + recency + tip;
 }
 
 export function pickTopGenAI(items, n) {

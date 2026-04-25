@@ -51,19 +51,35 @@ function renderWeather(cities) {
   for (const c of cities) {
     const card = document.createElement('div');
     card.className = 'weather-card';
+    const today = c.today || {};
+    const forecast = (c.forecast || []).slice(1, 7); // next 6 days
     card.innerHTML = `
-      <div class="icon" aria-hidden="true">${escapeHtml(c.current.icon || '')}</div>
-      <div>
-        <p class="city">${escapeHtml(c.cityName)}</p>
-        <div class="temp">${c.current.tempF != null ? c.current.tempF + '°' : '—'}</div>
-        <div class="cond">${escapeHtml(c.current.condition || '')}</div>
+      <div class="wx-current">
+        <div class="icon" aria-hidden="true">${escapeHtml(c.current.icon || '')}</div>
+        <div>
+          <p class="city">${escapeHtml(c.cityName)}</p>
+          <div class="temp">${c.current.tempF != null ? c.current.tempF + '°' : '—'}</div>
+          <div class="cond">${escapeHtml(c.current.condition || '')}</div>
+        </div>
       </div>
       <div class="extras">
-        <span>H ${c.today.highF ?? '—'}° / L ${c.today.lowF ?? '—'}°</span>
-        ${c.today.precipChance != null ? `<span>💧 ${c.today.precipChance}%</span>` : ''}
+        <span>H ${today.highF ?? '—'}° / L ${today.lowF ?? '—'}°</span>
+        ${today.precipChance != null ? `<span>💧 ${today.precipChance}%</span>` : ''}
         ${c.current.windMph != null ? `<span>💨 ${c.current.windMph} mph</span>` : ''}
         ${c.current.humidity != null ? `<span>${c.current.humidity}% humidity</span>` : ''}
-      </div>`;
+      </div>
+      ${forecast.length ? `
+        <div class="forecast" aria-label="6-day forecast">
+          ${forecast.map(d => `
+            <div class="forecast-day" title="${escapeHtml(d.condition || '')}${d.precipChance != null ? ' · ' + d.precipChance + '% precip' : ''}">
+              <div class="fd-dow">${escapeHtml(d.dow || '')}</div>
+              <div class="fd-icon" aria-hidden="true">${escapeHtml(d.icon || '')}</div>
+              <div class="fd-temps"><span class="fd-hi">${d.highF ?? '—'}°</span> <span class="fd-lo">${d.lowF ?? '—'}°</span></div>
+              ${d.precipChance != null && d.precipChance >= 20 ? `<div class="fd-precip">💧${d.precipChance}%</div>` : '<div class="fd-precip">&nbsp;</div>'}
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}`;
     root.appendChild(card);
   }
 }
@@ -89,6 +105,14 @@ function renderStories(id, stories) {
     a.textContent = s.title;
     li.appendChild(a);
 
+    const desc = cleanDescription(s.description, s.title);
+    if (desc) {
+      const p = document.createElement('p');
+      p.className = 'story-summary';
+      p.textContent = desc;
+      li.appendChild(p);
+    }
+
     const meta = document.createElement('div');
     meta.className = 'story-meta';
     if (s.source) {
@@ -111,6 +135,15 @@ function renderStories(id, stories) {
     li.appendChild(meta);
     ul.appendChild(li);
   }
+}
+
+// Clean up common feed-description noise (NewsAPI "[+1234 chars]", duplicate-of-title, etc.)
+function cleanDescription(desc, title) {
+  if (!desc) return '';
+  let d = String(desc).replace(/\s*\[\+\d+\s*chars\]\s*$/, '').trim();
+  // If description is just a prefix of the title, it's not useful.
+  if (title && d && (title.startsWith(d) || d === title)) return '';
+  return d;
 }
 
 function relativeTime(iso) {
