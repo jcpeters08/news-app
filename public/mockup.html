@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d12" />
+  <title>Daily Brief — MOCKUP</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Mockup-only overrides for the tabbed layout. These will get folded
+       into styles.css when the layout is approved. */
+
+    .mockup-banner {
+      background: #ffd166;
+      color: #15181f;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      padding: 6px 12px;
+      text-transform: uppercase;
+    }
+    .mockup-banner a { color: #15181f; text-decoration: underline; }
+
+    /* Override the default grid completely for mockup */
+    .grid {
+      grid-template-columns: 1fr;
+      grid-template-areas: none;
+    }
+
+    /* Always-on tech strip (Med/Tech + GenAI) */
+    .always-on {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 800px) {
+      .always-on { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* Tab bar */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: 0 auto;
+      max-width: max-content;
+    }
+    .tab {
+      appearance: none;
+      background: transparent;
+      border: 0;
+      color: var(--text-dim);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      padding: 8px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 120ms, color 120ms;
+    }
+    .tab:hover { color: var(--text); }
+    .tab[aria-selected="true"] {
+      background: var(--accent);
+      color: #0b0d12;
+    }
+
+    /* Tab panes */
+    .tab-pane[hidden] { display: none; }
+
+    /* Three-column section grid for Mexico and International tabs */
+    .section-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 700px) {
+      .section-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1100px) {
+      .section-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    .col h2 .count {
+      font-size: 11px;
+      color: var(--text-faint);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      margin-left: 6px;
+    }
+
+    /* Make weather cards a bit more compact in the mockup since the page
+       has more content overall now. */
+    .weather-card .extras { font-size: 11px; }
+
+    /* Subtle "always-on" label */
+    .always-on-label {
+      grid-column: 1 / -1;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin: 0 0 -6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-banner">
+    Mockup · dummy data · <a href="index.html">view live dashboard</a>
+  </div>
+
+  <header class="header">
+    <h1>Daily Brief</h1>
+    <div class="meta">Sat, Apr 25 · 1:00 PM CDT · Minneapolis</div>
+  </header>
+
+  <main class="grid">
+    <!-- ============ ALWAYS-VISIBLE ============ -->
+    <section class="brief">
+      <p>A security incident disrupted the White House Correspondents' Dinner; Trump was evacuated after reported gunfire and the shooter was killed. In AI, Google's $40B Anthropic investment and GPT-5.5's launch reshape the competitive landscape, while Mexico's Senate advances AI regulation with criminal penalties. Oaxaca is among states activating school security protocols after viral TikTok threats.</p>
+    </section>
+
+    <section class="weather" aria-label="Weather">
+      <div class="weather-cards">
+        <div class="weather-card">
+          <div class="wx-current">
+            <div class="icon">☁️</div>
+            <div>
+              <p class="city">Minneapolis</p>
+              <div class="temp">51°</div>
+              <div class="cond">Overcast</div>
+            </div>
+          </div>
+          <div class="extras">
+            <span>H 60° / L 45°</span><span>💧 36%</span><span>💨 8 mph</span>
+          </div>
+          <div class="forecast">
+            <div class="forecast-day"><div class="fd-dow">Sun</div><div class="fd-icon">🌧️</div><div class="fd-temps"><span class="fd-hi">58°</span><span class="fd-lo">46°</span></div><div class="fd-precip">💧23%</div></div>
+            <div class="forecast-day"><div class="fd-dow">Mon</div><div class="fd-icon">🌧️</div><div class="fd-temps"><span class="fd-hi">58°</span><span class="fd-lo">45°</span></div><div class="fd-precip">💧96%</div></div>
+            <div class="forecast-day"><div class="fd-dow">Tue</div><div class="fd-icon">☁️</div><div class="fd-temps"><span class="fd-hi">56°</span><span class="fd-lo">41°</span></div><div class="fd-precip">💧69%</div></div>
+            <div class="forecast-day"><div class="fd-dow">Wed</div><div class="fd-icon">☁️</div><div class="fd-temps"><span class="fd-hi">58°</span><span class="fd-lo">43°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Thu</div><div class="fd-icon">☁️</div><div class="fd-temps"><span class="fd-hi">59°</span><span class="fd-lo">43°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Fri</div><div class="fd-icon">☁️</div><div class="fd-temps"><span class="fd-hi">63°</span><span class="fd-lo">45°</span></div><div class="fd-precip">&nbsp;</div></div>
+          </div>
+        </div>
+
+        <div class="weather-card">
+          <div class="wx-current">
+            <div class="icon">☀️</div>
+            <div>
+              <p class="city">Mexico City</p>
+              <div class="temp">79°</div>
+              <div class="cond">Clear</div>
+            </div>
+          </div>
+          <div class="extras">
+            <span>H 81° / L 55°</span><span>💧 0%</span><span>💨 6 mph</span>
+          </div>
+          <div class="forecast">
+            <div class="forecast-day"><div class="fd-dow">Sun</div><div class="fd-icon">☀️</div><div class="fd-temps"><span class="fd-hi">82°</span><span class="fd-lo">55°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Mon</div><div class="fd-icon">🌤️</div><div class="fd-temps"><span class="fd-hi">80°</span><span class="fd-lo">56°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Tue</div><div class="fd-icon">⛈️</div><div class="fd-temps"><span class="fd-hi">75°</span><span class="fd-lo">57°</span></div><div class="fd-precip">💧60%</div></div>
+            <div class="forecast-day"><div class="fd-dow">Wed</div><div class="fd-icon">🌤️</div><div class="fd-temps"><span class="fd-hi">79°</span><span class="fd-lo">55°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Thu</div><div class="fd-icon">☀️</div><div class="fd-temps"><span class="fd-hi">81°</span><span class="fd-lo">54°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Fri</div><div class="fd-icon">☀️</div><div class="fd-temps"><span class="fd-hi">82°</span><span class="fd-lo">55°</span></div><div class="fd-precip">&nbsp;</div></div>
+          </div>
+        </div>
+
+        <div class="weather-card">
+          <div class="wx-current">
+            <div class="icon">🌤️</div>
+            <div>
+              <p class="city">Puerto Escondido</p>
+              <div class="temp">82°</div>
+              <div class="cond">Mostly clear</div>
+            </div>
+          </div>
+          <div class="extras">
+            <span>H 86° / L 75°</span><span>💧 0%</span><span>💨 12 mph</span>
+          </div>
+          <div class="forecast">
+            <div class="forecast-day"><div class="fd-dow">Sun</div><div class="fd-icon">☀️</div><div class="fd-temps"><span class="fd-hi">87°</span><span class="fd-lo">76°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Mon</div><div class="fd-icon">☀️</div><div class="fd-temps"><span class="fd-hi">88°</span><span class="fd-lo">76°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Tue</div><div class="fd-icon">🌤️</div><div class="fd-temps"><span class="fd-hi">86°</span><span class="fd-lo">75°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Wed</div><div class="fd-icon">⛈️</div><div class="fd-temps"><span class="fd-hi">84°</span><span class="fd-lo">76°</span></div><div class="fd-precip">💧70%</div></div>
+            <div class="forecast-day"><div class="fd-dow">Thu</div><div class="fd-icon">🌤️</div><div class="fd-temps"><span class="fd-hi">87°</span><span class="fd-lo">75°</span></div><div class="fd-precip">&nbsp;</div></div>
+            <div class="forecast-day"><div class="fd-dow">Fri</div><div class="fd-icon">☀️</div><div class="fd-temps"><span class="fd-hi">88°</span><span class="fd-lo">75°</span></div><div class="fd-precip">&nbsp;</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ALWAYS-ON: Med/Tech + GenAI ============ -->
+    <section class="always-on">
+      <p class="always-on-label">Tech & Science · always visible</p>
+
+      <div class="col">
+        <h2>Medicine &amp; Tech <span class="count">5 stories</span></h2>
+        <ul class="stories">
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">AI-Designed Drugs by a DeepMind Spinoff Are Headed to Human Trials</a>
+            <p class="story-summary">Isomorphic Labs moves first AI-designed therapies into Phase 1, a milestone proof point for the entire computational drug discovery field.</p>
+            <p class="story-why"><span class="story-why-label">Why it matters: </span>Phase 1 trials are the first real-world validation of a paradigm that could compress drug discovery timelines by years.</p>
+            <div class="story-meta"><span class="story-source">Wired</span><span>3h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">Gravity's strength measured more reliably than ever before</a>
+            <p class="story-summary">A new atom-interferometry experiment cuts uncertainty on the gravitational constant by half, addressing a decades-old precision problem.</p>
+            <p class="story-why"><span class="story-why-label">Why it matters: </span>Better G measurements ripple through GPS accuracy, geodesy, and dark-matter detection.</p>
+            <div class="story-meta"><span class="story-source">New Scientist</span><span>5h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">Keto may work best for sending diabetes into remission: Here's why</a>
+            <p class="story-summary">Evidence that ketogenic diets improve beta-cell function — not just glucose control — offers a mechanistic basis for diabetes remission.</p>
+            <div class="story-meta"><span class="story-source">Medical News Today</span><span>9h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">Project Maven and the AI that taught the military to love computer vision</a>
+            <p class="story-summary">Inside the program that put real-time object detection into the targeting loop and rewrote how the Pentagon procures AI.</p>
+            <div class="story-meta"><span class="story-source">The Verge</span><span>11h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">Universal flu vaccine candidate reaches Phase 3 with broad strain coverage</a>
+            <p class="story-summary">Mosaic-protein design protects against H1, H3, and B lineages in early trials — could replace annual reformulations.</p>
+            <div class="story-meta"><span class="story-source">Nature</span><span>14h ago</span></div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="col">
+        <h2>GenAI · Claude &amp; ChatGPT <span class="count">5 stories</span></h2>
+        <ul class="stories">
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">How to use MCP servers with Claude for production agent workflows</a>
+            <p class="story-summary">A practical walkthrough of authentication, tool exposure, and timeout strategies for MCP-based agent stacks in production.</p>
+            <p class="story-why"><span class="story-why-label">Why it matters: </span>MCP is the closest thing AI tooling has to a stable wire format right now — worth understanding deeply.</p>
+            <div class="story-meta"><span class="story-source">Simon Willison</span><span>2h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">Speeding up agentic workflows with WebSockets in the Responses API</a>
+            <p class="story-summary">Reducing latency for tool-use loops by switching from SSE to WebSockets, with concrete benchmarks across 5 tasks.</p>
+            <div class="story-meta"><span class="story-source">OpenAI</span><span>4h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">Prompt caching deep-dive: when 5-minute and 1-hour TTLs actually matter</a>
+            <p class="story-summary">Real-world cost analysis of cache hit rates across long-running agents, evals, and conversational sessions.</p>
+            <div class="story-meta"><span class="story-source">Latent Space</span><span>7h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">Introducing GPT-5.5</a>
+            <p class="story-summary">OpenAI's new flagship with extended context, improved tool-use reliability, and better refusals on ambiguous prompts.</p>
+            <div class="story-meta"><span class="story-source">OpenAI</span><span>10h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">DeepSeek V4 Pro and Flash run on Huawei Ascend chips</a>
+            <p class="story-summary">A 1.6T-parameter mixture-of-experts and a 284B sibling, both runnable on domestic Chinese hardware.</p>
+            <div class="story-meta"><span class="story-source">Latent Space</span><span>13h ago</span></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ TAB BAR ============ -->
+    <nav class="tabs" role="tablist" aria-label="Region">
+      <button class="tab" role="tab" data-tab="us"   aria-selected="true">US</button>
+      <button class="tab" role="tab" data-tab="mx"   aria-selected="false">Mexico</button>
+      <button class="tab" role="tab" data-tab="intl" aria-selected="false">International</button>
+    </nav>
+
+    <!-- ============ US PANE ============ -->
+    <section class="tab-pane" data-pane="us" role="tabpanel">
+      <div class="col">
+        <h2>US Politics <span class="count">5 stories</span></h2>
+        <ul class="stories">
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">DOJ adds firing squad as execution method in federal death penalty cases</a>
+            <p class="story-summary">A revised protocol allows firing squads as a backup when other methods are unavailable, signaling a shift in federal execution policy.</p>
+            <p class="story-why"><span class="story-why-label">Why it matters: </span>The change is likely to face immediate legal challenges and could reach the Supreme Court within the year.</p>
+            <div class="story-meta"><span class="story-source">Breitbart News</span><span class="bias bias-right">Right</span><span>2h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">As US re-arms during Iran ceasefire, long-term concerns emerge about munitions supply</a>
+            <p class="story-summary">Defense officials warn that domestic production of advanced munitions is being outpaced by use, raising questions about industrial capacity.</p>
+            <div class="story-meta"><span class="story-source">CBS News</span><span class="bias bias-lean-left">Lean Left</span><span>5h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">Senate advances bipartisan rural-broadband bill ahead of recess</a>
+            <p class="story-summary">A 71-29 procedural vote sets up final passage of $42B in fiber and last-mile wireless deployment grants.</p>
+            <div class="story-meta"><span class="story-source">The Hill</span><span class="bias bias-center">Center</span><span>8h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">FDA expands compounded-GLP1 ban after manufacturer settlement</a>
+            <p class="story-summary">Compounding pharmacies must phase out semaglutide and tirzepatide preparations within 60 days under a new consent decree.</p>
+            <div class="story-meta"><span class="story-source">Reuters</span><span class="bias bias-center">Center</span><span>11h ago</span></div>
+          </li>
+          <li class="story">
+            <a class="story-title" href="#" target="_blank">Hungary lifts EU veto on $106B Ukraine loan after Orban exit</a>
+            <p class="story-summary">With Orban's coalition out of power, Hungary's new government drops opposition to a major EU financial package for Ukraine.</p>
+            <div class="story-meta"><span class="story-source">The Huffington Post</span><span class="bias bias-left">Left</span><span>16h ago</span></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ MEXICO PANE ============ -->
+    <section class="tab-pane" data-pane="mx" role="tabpanel" hidden>
+      <div class="section-grid">
+        <div class="col">
+          <h2>Politics &amp; National <span class="count">5</span></h2>
+          <ul class="stories">
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Sheinbaum y Trump se reúnen para discutir financiamiento de seguridad fronteriza</a>
+              <p class="story-summary">Los dos líderes se reunieron en Washington para discutir financiamiento conjunto de infraestructura fronteriza.</p>
+              <p class="story-why"><span class="story-why-label">Why it matters: </span>First Sheinbaum-Trump bilateral; outcome will shape migration enforcement and northern-border industrial corridors.</p>
+              <div class="story-meta"><span class="story-source">Reforma</span><span class="bias region-mexico">🇲🇽 Mexico</span><span class="lang-tag">ES</span><span>3h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">México prepara regulación de IA con sentencias de cárcel por usos indebidos</a>
+              <p class="story-summary">Senado avanza ley con penas de prisión por desinformación electoral y deepfakes sexuales.</p>
+              <div class="story-meta"><span class="story-source">Mexico News Daily</span><span class="bias region-mexico">🇲🇽 Mexico</span><span>6h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">CIA operation in Chihuahua exposed; Mexico demands explanations</a>
+              <p class="story-summary">Documents reveal an unauthorized US operation in northern Mexico; Sheinbaum demands a formal response.</p>
+              <div class="story-meta"><span class="story-source">La Jornada</span><span class="bias region-mexico">🇲🇽 Mexico</span><span class="lang-tag">ES</span><span>10h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Banxico holds rate at 8.50% citing peso strength</a>
+              <p class="story-summary">Central bank pauses cutting cycle as USD/MXN tightens; analysts split on October move.</p>
+              <div class="story-meta"><span class="story-source">BBC Mundo</span><span class="bias region-mexico">🇲🇽 Mexico</span><span class="lang-tag">ES</span><span>14h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Pemex restructuring plan submitted; bond markets react</a>
+              <p class="story-summary">A $9.4B liability plan signals private-sector partnership, sending Pemex bonds tighter by 80bps.</p>
+              <div class="story-meta"><span class="story-source">Reforma</span><span class="bias region-mexico">🇲🇽 Mexico</span><span class="lang-tag">ES</span><span>20h ago</span></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col">
+          <h2>Culture &amp; Travel <span class="count">5</span></h2>
+          <ul class="stories">
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Mexico City's mezcal scene gets a quiet, ingredient-driven update</a>
+              <p class="story-summary">A new wave of bars in Roma Norte and Juárez foreground heirloom agave varieties from small producers.</p>
+              <div class="story-meta"><span class="story-source">Mexico News Daily</span><span class="bias region-mexico">🇲🇽 Mexico</span><span>4h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Día de los Muertos preparations begin in Janitzio and Mixquic</a>
+              <p class="story-summary">Lake Pátzcuaro communities and CDMX's Mixquic ramp up for the most-visited Day of the Dead celebrations.</p>
+              <div class="story-meta"><span class="story-source">El Universal</span><span class="bias region-mexico">🇲🇽 Mexico</span><span class="lang-tag">ES</span><span>9h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">CDMX bike-share network expands to 480 stations</a>
+              <p class="story-summary">Ecobici doubles its footprint with new docks in Coyoacán and Iztapalapa; tourist day-passes now available in app.</p>
+              <div class="story-meta"><span class="story-source">Mexico News Daily</span><span class="bias region-mexico">🇲🇽 Mexico</span><span>12h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Frida Kahlo's Casa Azul to limit daily visitors after restoration</a>
+              <p class="story-summary">Coyoacán museum caps entry at 1,200/day to protect newly stabilized murals; reservations required.</p>
+              <div class="story-meta"><span class="story-source">La Jornada</span><span class="bias region-mexico">🇲🇽 Mexico</span><span class="lang-tag">ES</span><span>17h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">San Miguel de Allende's harvest season begins for grape and pomegranate</a>
+              <p class="story-summary">Bajío wineries and orchards open to weekend visitors through November; tasting routes published.</p>
+              <div class="story-meta"><span class="story-source">Mexico News Daily</span><span class="bias region-mexico">🇲🇽 Mexico</span><span>1d ago</span></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col">
+          <h2>Oaxaca &amp; Puerto Escondido <span class="count">5</span></h2>
+          <ul class="stories">
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Llegada de turistas a Puerto Escondido marca récord en abril</a>
+              <p class="story-summary">El destino de la Costa Chica reporta ocupación hotelera del 92% durante Semana Santa.</p>
+              <p class="story-why"><span class="story-why-label">Why it matters: </span>Headline translates as "Tourist arrivals to Puerto Escondido set April record." Higher occupancy means longer waits for Zicatela tables and more crowded surf at La Punta.</p>
+              <div class="story-meta"><span class="story-source">NSS Oaxaca</span><span class="bias region-oaxaca">🇲🇽 Oaxaca</span><span class="lang-tag">ES</span><span>2h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">New highway connects Oaxaca City to coastal Huatulco</a>
+              <p class="story-summary">The 240km route cuts travel time from 7 hours to 3.5 hours; opening ceremony scheduled for late May.</p>
+              <div class="story-meta"><span class="story-source">Mexico News Daily</span><span class="bias region-oaxaca">🇲🇽 Oaxaca</span><span>5h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Sismo de 5.2 sacude Pochutla sin daños mayores</a>
+              <p class="story-summary">Protección Civil reporta movilizaciones preventivas en la región del Istmo.</p>
+              <div class="story-meta"><span class="story-source">NSS Oaxaca</span><span class="bias region-oaxaca">🇲🇽 Oaxaca</span><span class="lang-tag">ES</span><span>8h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Activan operativos en escuelas por reto viral de TikTok</a>
+              <p class="story-summary">Security protocols activated across multiple states including Oaxaca after viral TikTok challenge threatens school attacks.</p>
+              <div class="story-meta"><span class="story-source">La Jornada</span><span class="bias region-oaxaca">🇲🇽 Oaxaca</span><span class="lang-tag">ES</span><span>13h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Festival of the Sea returns to Puerto Escondido this November</a>
+              <p class="story-summary">The annual festival features local seafood producers, regional bands, and a craft market on Playa Principal.</p>
+              <div class="story-meta"><span class="story-source">Mexico News Daily</span><span class="bias region-oaxaca">🇲🇽 Oaxaca</span><span>1d ago</span></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INTERNATIONAL PANE ============ -->
+    <section class="tab-pane" data-pane="intl" role="tabpanel" hidden>
+      <div class="section-grid">
+        <div class="col">
+          <h2>World Politics <span class="count">5</span></h2>
+          <ul class="stories">
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Europe's NATO allies push back at reported US threat to Spain</a>
+              <p class="story-summary">European leaders publicly reject US pressure tactics aimed at Spain's defense spending posture, citing alliance treaty obligations.</p>
+              <p class="story-why"><span class="story-why-label">Why it matters: </span>Public friction inside NATO is rare and usually private; this signals deeper transatlantic strain.</p>
+              <div class="story-meta"><span class="story-source">BBC News</span><span class="bias bias-center">Center</span><span>3h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">German coalition collapses; snap election expected in February</a>
+              <p class="story-summary">Chancellor's party loses Greens after disagreement on Ukraine aid and budget; caretaker government in place.</p>
+              <div class="story-meta"><span class="story-source">Reuters</span><span class="bias bias-center">Center</span><span>6h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Indonesia's new capital Nusantara struggles with infrastructure delays</a>
+              <p class="story-summary">Three years past official launch, civil servants resist relocation citing housing and transit gaps.</p>
+              <div class="story-meta"><span class="story-source">The Guardian</span><span class="bias bias-lean-left">Lean Left</span><span>11h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Argentina's central bank ends crawling peg, lets peso float</a>
+              <p class="story-summary">Milei's economic team abandons the currency band system after 18 months; FX reserves at 3-year low.</p>
+              <div class="story-meta"><span class="story-source">Bloomberg</span><span class="bias bias-lean-left">Lean Left</span><span>15h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Ethiopia signs Red Sea port deal with Somalia</a>
+              <p class="story-summary">Long-disputed access agreement ends three years of regional friction; Eritrea responds with troop movements.</p>
+              <div class="story-meta"><span class="story-source">Al Jazeera</span><span class="bias bias-lean-left">Lean Left</span><span>22h ago</span></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col">
+          <h2>General News <span class="count">5</span></h2>
+          <ul class="stories">
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Glacier blocks route to Everest summit; climbers in limbo</a>
+              <p class="story-summary">A massive serac is hindering the route to the summit. Hundreds of climbers and sherpas are at base camp waiting for it to collapse.</p>
+              <div class="story-meta"><span class="story-source">CNN</span><span class="bias bias-lean-left">Lean Left</span><span>2h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Dengue cases surge across Caribbean, WHO issues regional advisory</a>
+              <p class="story-summary">Cases up 340% YoY across 12 countries; WHO recommends standing surveillance and stockpile coordination.</p>
+              <div class="story-meta"><span class="story-source">BBC News</span><span class="bias bias-center">Center</span><span>7h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Antarctic sea ice hits new winter low for second consecutive year</a>
+              <p class="story-summary">Satellite data shows max extent 1.4M km² below 1981–2010 average; researchers cite Southern Ocean warming.</p>
+              <div class="story-meta"><span class="story-source">Reuters</span><span class="bias bias-center">Center</span><span>10h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Tokyo subway resumes full service after weekend signal-system upgrade</a>
+              <p class="story-summary">First major Toei/Tokyo Metro overhaul in 12 years; AI-driven scheduling reduces peak-hour delays by 22% in trials.</p>
+              <div class="story-meta"><span class="story-source">The Guardian</span><span class="bias bias-lean-left">Lean Left</span><span>14h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Saharan dust plume reaches northern Mexico for fifth time this year</a>
+              <p class="story-summary">Air-quality alerts issued in Monterrey and Saltillo; particulates expected to reach Texas by Wednesday.</p>
+              <div class="story-meta"><span class="story-source">Bloomberg</span><span class="bias bias-lean-left">Lean Left</span><span>20h ago</span></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col">
+          <h2>Travel &amp; Style <span class="count">5</span></h2>
+          <ul class="stories">
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">The 25 best new hotels in the world for 2026</a>
+              <p class="story-summary">An annual guide ranges from a converted Lisbon convent to a Patagonia eco-lodge built into a glacier valley.</p>
+              <div class="story-meta"><span class="story-source">Condé Nast Traveler</span><span>5h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Why Lisbon is back at the top of every travel list this fall</a>
+              <p class="story-summary">A new wave of micro-hotels in Alfama and revived tile-craft workshops are pulling discerning travelers away from Porto.</p>
+              <div class="story-meta"><span class="story-source">Travel + Leisure</span><span>9h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">The return of relaxed tailoring: looser, longer, easier</a>
+              <p class="story-summary">From Paris and Milan to New York, fall '26 leans into wider trousers, soft shoulders, and unstructured blazers.</p>
+              <div class="story-meta"><span class="story-source">GQ</span><span>13h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">Inside the slow rebirth of Kyoto's machiya townhouses</a>
+              <p class="story-summary">Owner-architects are converting 100-year-old wooden townhouses into restrained, design-forward stays.</p>
+              <div class="story-meta"><span class="story-source">National Geographic</span><span>18h ago</span></div>
+            </li>
+            <li class="story">
+              <a class="story-title" href="#" target="_blank">A walking guide to Mexico City's most stylish neighborhoods</a>
+              <p class="story-summary">Roma Norte, Condesa, Polanco, and the quieter San Miguel Chapultepec — what to see, eat, and skip.</p>
+              <div class="story-meta"><span class="story-source">Condé Nast Traveler</span><span>1d ago</span></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Mockup with dummy data · <a href="index.html">view live dashboard</a></p>
+  </footer>
+
+  <script>
+    // Tab switching with localStorage persistence.
+    const tabs = document.querySelectorAll('.tab');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    function activate(name) {
+      for (const t of tabs) t.setAttribute('aria-selected', t.dataset.tab === name ? 'true' : 'false');
+      for (const p of panes) p.hidden = p.dataset.pane !== name;
+      try { localStorage.setItem('news-app:tab', name); } catch {}
+    }
+
+    for (const t of tabs) {
+      t.addEventListener('click', () => activate(t.dataset.tab));
+      t.addEventListener('keydown', (e) => {
+        const order = ['us','mx','intl'];
+        const idx = order.indexOf(t.dataset.tab);
+        if (e.key === 'ArrowRight') activate(order[(idx + 1) % order.length]);
+        if (e.key === 'ArrowLeft')  activate(order[(idx - 1 + order.length) % order.length]);
+      });
+    }
+
+    let initial = 'us';
+    try {
+      const saved = localStorage.getItem('news-app:tab');
+      if (saved && ['us','mx','intl'].includes(saved)) initial = saved;
+    } catch {}
+    activate(initial);
+  </script>
+</body>
+</html>
