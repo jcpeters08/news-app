@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>NSS Oaxaca</title>
+    <link>https://nssoaxaca.com</link>
+    <description>Noticias de Oaxaca</description>
+    <item>
+      <title>Llegada de turistas a Puerto Escondido marca récord en abril</title>
+      <link>https://nssoaxaca.com/2026/04/25/turistas-puerto-escondido</link>
+      <description>El destino de la Costa Chica reporta ocupación hotelera del 92% durante Semana Santa.</description>
+      <pubDate>REPLACE_NOW</pubDate>
+    </item>
+    <item>
+      <title>Sismo de 5.2 sacude Pochutla sin daños mayores</title>
+      <link>https://nssoaxaca.com/2026/04/25/sismo-pochutla</link>
+      <description>Protección Civil reporta movilizaciones preventivas en la región del Istmo.</description>
+      <pubDate>REPLACE_NOW</pubDate>
+    </item>
+  </channel>
+</rss>

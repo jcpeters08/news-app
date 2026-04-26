@@ -273,6 +273,17 @@ a:hover { text-decoration: underline; }
 .bias-center { color: var(--bias-center); }
 .bias-lean-right { color: var(--bias-lean-right); }
 .bias-right { color: var(--bias-right); }
+.region-mexico { color: #56c596; }
+.region-oaxaca { color: #f39c4d; }
+.lang-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--bg-elev-2);
+  color: var(--text-faint);
+}
 
 .empty, .error {
   font-size: 13px;

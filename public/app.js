@@ -149,6 +149,18 @@ function renderStories(id, stories) {
       b.className = `bias bias-${s.bias}`;
       b.textContent = s.biasLabel || s.bias;
       meta.appendChild(b);
+    } else if (s.region === 'mexico') {
+      const b = document.createElement('span');
+      b.className = `bias region-mexico${s.isOaxaca ? ' region-oaxaca' : ''}`;
+      b.textContent = s.isOaxaca ? '🇲🇽 Oaxaca' : '🇲🇽 Mexico';
+      meta.appendChild(b);
+    }
+    if (s.language && s.language !== 'en') {
+      const lang = document.createElement('span');
+      lang.className = 'lang-tag';
+      lang.textContent = s.language.toUpperCase();
+      lang.title = `Article in ${s.language === 'es' ? 'Spanish' : s.language}`;
+      meta.appendChild(lang);
     }
     if (s.publishedAt) {
       const t = document.createElement('span');

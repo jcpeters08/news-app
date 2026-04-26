@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { fetchCategory, pickTop } from './fetch-news.mjs';
 import { fetchGenAI, pickTopGenAI } from './fetch-genai.mjs';
+import { fetchMexico } from './fetch-mexico.mjs';
 import { fetchWeather, CITIES } from './fetch-weather.mjs';
 import { curateAll, isAvailable as claudeAvailable } from './claude-curator.mjs';
 
@@ -59,14 +60,19 @@ async function main() {
     fetchCategory({ category: 'politics', apiKey, now }),
     fetchCategory({ category: 'medicine_tech', apiKey, now }),
     fetchGenAI({ now }),
+    fetchMexico({ now }),
     ...CITIES.map(c => fetchWeather({ city: c })),
   ]);
 
-  const [politics, medTech, genai, ...weatherResults] = results;
+  const [politics, medTech, genai, mexico, ...weatherResults] = results;
 
   const errors = [];
   // Wider pre-filtered pool that we hand to Claude for curation.
-  const polPool = handle(politics, errors, 'politics', s => pickTop(s, CANDIDATE_POOL, { balance: true }));
+  const polUS = handle(politics, errors, 'politics', s => pickTop(s, CANDIDATE_POOL, { balance: true }));
+  const polMX = handle(mexico, errors, 'mexico', s => s.slice(0, 20));
+  // Merge US politics + Mexico stories. Oaxaca-tagged stories go first
+  // so they're least likely to be truncated if the prompt grows large.
+  const polPool = mergePolitics(polUS, polMX);
   const medPool = handle(medTech, errors, 'medicineTech', s => pickTop(s, CANDIDATE_POOL));
   const genPool = handle(genai, errors, 'genai', s => pickTopGenAI(s, CANDIDATE_POOL));
 
@@ -140,6 +146,14 @@ function handle(settled, errors, label, picker) {
   if (settled.status === 'fulfilled') return picker(settled.value);
   errors.push(`${label}: ${settled.reason?.message || settled.reason}`);
   return [];
+}
+
+// Merge US politics with Mexico stories. Oaxaca-flagged stories first
+// (stable priority for the curator), then other Mexico stories, then US.
+export function mergePolitics(us, mx) {
+  const oaxaca = mx.filter(s => s.isOaxaca);
+  const otherMx = mx.filter(s => !s.isOaxaca);
+  return [...oaxaca, ...otherMx, ...us];
 }
 
 // Only run main when invoked as a script.

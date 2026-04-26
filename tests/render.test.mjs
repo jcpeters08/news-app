@@ -69,6 +69,41 @@ async function setupDom(data = SAMPLE) {
 }
 
 describe('frontend render', () => {
+  it('renders Mexico region badge instead of bias for region-tagged stories', async () => {
+    const data = {
+      ...SAMPLE,
+      politics: [
+        { title: 'Oaxaca quake', url: 'https://x/q', source: 'NSS Oaxaca',
+          region: 'mexico', isOaxaca: true, language: 'es',
+          description: 'Sismo en la costa.', publishedAt: new Date().toISOString() },
+        { title: 'Sheinbaum visit', url: 'https://x/s', source: 'Mexico News Daily',
+          region: 'mexico', isOaxaca: false, language: 'en',
+          description: 'President visits border.', publishedAt: new Date().toISOString() },
+      ],
+    };
+    const doc = await setupDom(data);
+    const badges = doc.querySelectorAll('#politics .bias');
+    expect(badges.length).toBe(2);
+    expect(badges[0].classList.contains('region-oaxaca')).toBe(true);
+    expect(badges[0].textContent).toContain('Oaxaca');
+    expect(badges[1].classList.contains('region-mexico')).toBe(true);
+    expect(badges[1].textContent).toContain('Mexico');
+  });
+
+  it('shows ES tag for Spanish-language stories', async () => {
+    const data = {
+      ...SAMPLE,
+      politics: [
+        { title: 'Sismo', url: 'https://x', source: 'La Jornada',
+          region: 'mexico', language: 'es', publishedAt: new Date().toISOString() },
+      ],
+    };
+    const doc = await setupDom(data);
+    const lang = doc.querySelector('#politics .lang-tag');
+    expect(lang).toBeTruthy();
+    expect(lang.textContent).toBe('ES');
+  });
+
   it('renders 2 politics stories with bias badges', async () => {
     const doc = await setupDom();
     const items = doc.querySelectorAll('#politics .story');

@@ -94,6 +94,18 @@ export const GENAI_FEEDS = [
   { url: 'https://hnrss.org/frontpage', source: 'Hacker News', weight: 5, filterKeywords: true },
 ];
 
+// Mexico-focused RSS feeds. Mix of English (Mexico News Daily) and Spanish.
+// Stories from these feeds are merged into the politics candidate pool so
+// Claude can prioritize Mexico/Oaxaca content per Jonathan's preferences.
+// Verified reachable as of 2026-04-25.
+export const MEXICO_FEEDS = [
+  { url: 'https://mexiconewsdaily.com/feed/',           source: 'Mexico News Daily', language: 'en', weight: 12 },
+  { url: 'https://nssoaxaca.com/feed/',                 source: 'NSS Oaxaca',        language: 'es', weight: 13, oaxaca: true },
+  { url: 'https://www.jornada.com.mx/rss/edicion.xml',  source: 'La Jornada',        language: 'es', weight: 9  },
+  { url: 'https://www.reforma.com/rss/portada.xml',     source: 'Reforma',           language: 'es', weight: 9  },
+  { url: 'https://feeds.bbci.co.uk/mundo/rss.xml',      source: 'BBC Mundo',         language: 'es', weight: 8  },
+];
+
 export const GENAI_KEYWORDS = [
   'claude', 'anthropic', 'chatgpt', 'openai', 'gpt-4', 'gpt-5', 'o1', 'o3',
   'llm', 'mcp', 'prompt', 'agent', 'rag', 'tool use', 'function calling',
