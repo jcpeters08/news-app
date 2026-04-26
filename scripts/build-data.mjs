@@ -7,12 +7,15 @@ import { fileURLToPath } from 'node:url';
 import { fetchCategory, pickTop } from './fetch-news.mjs';
 import { fetchGenAI, pickTopGenAI } from './fetch-genai.mjs';
 import { fetchWeather, CITIES } from './fetch-weather.mjs';
+import { curateAll, isAvailable as claudeAvailable } from './claude-curator.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const DATA_PATH = path.join(ROOT, 'public', 'data.json');
 
 const STORIES_PER_CATEGORY = 5;
+// Wider candidate pool we hand to Claude for curation. Claude picks 5.
+const CANDIDATE_POOL = 25;
 
 // Returns the current hour in America/Chicago (0-23) regardless of host TZ or DST.
 export function chicagoHour(now = new Date()) {
@@ -62,16 +65,55 @@ async function main() {
   const [politics, medTech, genai, ...weatherResults] = results;
 
   const errors = [];
+  // Wider pre-filtered pool that we hand to Claude for curation.
+  const polPool = handle(politics, errors, 'politics', s => pickTop(s, CANDIDATE_POOL, { balance: true }));
+  const medPool = handle(medTech, errors, 'medicineTech', s => pickTop(s, CANDIDATE_POOL));
+  const genPool = handle(genai, errors, 'genai', s => pickTopGenAI(s, CANDIDATE_POOL));
+
+  // Default picks (used as fallback if Claude isn't available or fails).
+  let picked = {
+    politics: polPool.slice(0, STORIES_PER_CATEGORY),
+    medicineTech: medPool.slice(0, STORIES_PER_CATEGORY),
+    genai: genPool.slice(0, STORIES_PER_CATEGORY),
+    dailyBrief: '',
+  };
+  let curationMeta = { used: false };
+
+  if (claudeAvailable()) {
+    const curated = await curateAll({
+      politics: polPool, medicineTech: medPool, genai: genPool,
+      n: STORIES_PER_CATEGORY,
+    });
+    if (curated.ok) {
+      // Only override categories that came back non-empty; keep fallback otherwise.
+      picked = {
+        politics: curated.politics.length ? curated.politics : picked.politics,
+        medicineTech: curated.medicineTech.length ? curated.medicineTech : picked.medicineTech,
+        genai: curated.genai.length ? curated.genai : picked.genai,
+        dailyBrief: curated.dailyBrief || '',
+      };
+      curationMeta = {
+        used: true,
+        model: curated.model,
+        tokens: curated.tokens,
+      };
+    } else {
+      errors.push(`claude-curator: ${curated.error}`);
+    }
+  }
+
   const data = {
     generatedAt: now.toISOString(),
-    politics: handle(politics, errors, 'politics', s => pickTop(s, STORIES_PER_CATEGORY, { balance: true })),
-    medicineTech: handle(medTech, errors, 'medicineTech', s => pickTop(s, STORIES_PER_CATEGORY)),
-    genai: handle(genai, errors, 'genai', s => pickTopGenAI(s, STORIES_PER_CATEGORY)),
+    dailyBrief: picked.dailyBrief,
+    politics: picked.politics,
+    medicineTech: picked.medicineTech,
+    genai: picked.genai,
     weather: weatherResults.map((r, i) => {
       if (r.status === 'fulfilled') return r.value;
       errors.push(`weather:${CITIES[i].id} ${r.reason?.message}`);
       return null;
     }).filter(Boolean),
+    curation: curationMeta,
     errors,
   };
 

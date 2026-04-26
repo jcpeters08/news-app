@@ -130,6 +130,34 @@ describe('frontend render', () => {
     }
   });
 
+  it('renders daily brief when present', async () => {
+    const data = { ...SAMPLE, dailyBrief: 'Pacific storm churns toward Oaxaca coast tonight; Senate advances infrastructure bill.' };
+    const doc = await setupDom(data);
+    const brief = doc.getElementById('brief');
+    expect(brief.hidden).toBe(false);
+    expect(doc.getElementById('brief-text').textContent).toContain('Oaxaca');
+  });
+
+  it('hides daily brief section when empty', async () => {
+    const doc = await setupDom({ ...SAMPLE, dailyBrief: '' });
+    expect(doc.getElementById('brief').hidden).toBe(true);
+  });
+
+  it('renders whyItMatters under stories', async () => {
+    const data = {
+      ...SAMPLE,
+      politics: [{
+        ...SAMPLE.politics[0],
+        whyItMatters: 'Federal infrastructure spending will reroute capital toward rural broadband.',
+      }],
+    };
+    const doc = await setupDom(data);
+    const why = doc.querySelector('#politics .story-why');
+    expect(why).toBeTruthy();
+    expect(why.textContent).toContain('rural broadband');
+    expect(doc.querySelector('#politics .story-why-label').textContent).toContain('Why it matters');
+  });
+
   it('skips empty/duplicate-of-title descriptions', async () => {
     const data = {
       ...SAMPLE,

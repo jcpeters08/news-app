@@ -20,6 +20,27 @@ Personal mobile-first dashboard with balanced news (politics + medicine/tech), G
 3. In this repo on GitHub: **Settings → Secrets and variables → Actions → New repository secret**.
 4. Name: `NEWSAPI_KEY` · Value: your key. Save.
 
+### 1b. Anthropic API key (optional but recommended)
+
+If set, Claude reads the candidate stories each run and (a) picks the most
+personally relevant 5 per category, (b) writes a 1–2 sentence "why this
+matters" gloss per story, and (c) generates a 2–3 sentence daily brief at
+the top of the dashboard. Without it, the build falls back to recency-based
+picks with no glosses.
+
+1. Go to https://console.anthropic.com → add billing (~$5 covers many months).
+2. Settings → API Keys → Create Key.
+3. Add to repo: secret name `ANTHROPIC_API_KEY`.
+4. Optional: repository **variable** `CLAUDE_MODEL` (default `claude-opus-4-5`).
+   Set to `claude-haiku-4-5` for ~15× lower cost.
+
+Cost notes (twice-daily cron):
+- **Opus** (default): ~$10–15/month
+- **Haiku**: ~$0.30–1.20/month
+
+Curation preferences live in [scripts/prefs.js](scripts/prefs.js) — edit that
+file (no code changes elsewhere) to retune what Claude prioritizes.
+
 ### 2. Enable GitHub Pages
 
 - **Settings → Pages → Build and deployment → Source: GitHub Actions**.

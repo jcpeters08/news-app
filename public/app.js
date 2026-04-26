@@ -12,11 +12,23 @@
   }
 
   renderMeta(data);
+  renderBrief(data.dailyBrief);
   renderWeather(data.weather || []);
   renderStories('politics', data.politics);
   renderStories('medicineTech', data.medicineTech);
   renderStories('genai', data.genai);
 })();
+
+function renderBrief(brief) {
+  const section = document.getElementById('brief');
+  const text = document.getElementById('brief-text');
+  if (!brief || !brief.trim()) {
+    section.hidden = true;
+    return;
+  }
+  text.textContent = brief.trim();
+  section.hidden = false;
+}
 
 function renderMeta(data) {
   const meta = document.getElementById('meta');
@@ -111,6 +123,17 @@ function renderStories(id, stories) {
       p.className = 'story-summary';
       p.textContent = desc;
       li.appendChild(p);
+    }
+
+    if (s.whyItMatters) {
+      const why = document.createElement('p');
+      why.className = 'story-why';
+      const label = document.createElement('span');
+      label.className = 'story-why-label';
+      label.textContent = 'Why it matters: ';
+      why.appendChild(label);
+      why.appendChild(document.createTextNode(s.whyItMatters));
+      li.appendChild(why);
     }
 
     const meta = document.createElement('div');

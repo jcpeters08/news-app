@@ -80,16 +80,57 @@ a:hover { text-decoration: underline; }
   gap: 16px;
   grid-template-columns: 1fr;
   grid-template-areas:
+    "brief"
     "weather"
     "politics"
     "medicineTech"
     "genai";
 }
 
+.brief { grid-area: brief; }
 .weather { grid-area: weather; }
 [data-cat="politics"] { grid-area: politics; }
 [data-cat="medicineTech"] { grid-area: medicineTech; }
 [data-cat="genai"] { grid-area: genai; }
+
+.brief {
+  background: linear-gradient(135deg, var(--bg-elev), var(--bg-elev-2));
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 16px;
+  padding: 14px 18px;
+  box-shadow: var(--shadow);
+}
+.brief p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.brief::before {
+  content: "Today's brief";
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.story-why {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text-dim);
+  border-left: 2px solid var(--accent);
+  padding-left: 10px;
+}
+.story-why-label {
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
 
 .weather-cards {
   display: grid;
@@ -254,6 +295,7 @@ a:hover { text-decoration: underline; }
   .grid {
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
+      "brief brief"
       "weather weather"
       "politics medicineTech"
       "genai genai";
@@ -265,6 +307,7 @@ a:hover { text-decoration: underline; }
   .grid {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas:
+      "brief brief brief"
       "weather weather weather"
       "politics medicineTech genai";
   }

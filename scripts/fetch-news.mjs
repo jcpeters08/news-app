@@ -2,7 +2,7 @@ import { SOURCE_BIAS, BIAS_LABEL, POLITICS_SOURCES, TECH_MED_SOURCES } from './s
 
 const TOP_HEADLINES = 'https://newsapi.org/v2/top-headlines';
 const EVERYTHING = 'https://newsapi.org/v2/everything';
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 100;
 
 // NewsAPI quirk: top-headlines accepts `sources` OR (`category`+`country`),
 // not both. We use top-headlines+sources for politics (broad daily news),

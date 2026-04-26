@@ -12,6 +12,7 @@
     "preview": "node scripts/serve.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0",
     "fast-xml-parser": "^4.5.0"
   },
   "devDependencies": {
