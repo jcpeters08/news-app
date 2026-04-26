@@ -29,7 +29,37 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Time-gate job. The cron fires at 4 UTC times so that one of them is
+  # always exactly 6am or 1pm America/Chicago across DST. The other 2-3
+  # firings should NO-OP — without this gate, they would deploy an empty
+  # public/ and 404 the live site (which is exactly what happened on
+  # 2026-04-26 13:01 UTC). Manual workflow_dispatch with force=true
+  # bypasses the gate.
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+    steps:
+      - id: check
+        name: Check Chicago hour
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.force }}" = "true" ]; then
+            echo "Force-run requested, bypassing time gate."
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          h=$(TZ=America/Chicago date +%H)
+          echo "Chicago hour: $h"
+          if [ "$h" = "06" ] || [ "$h" = "13" ]; then
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_run=false  (skipping — not 6am or 1pm Chicago)" >> "$GITHUB_STEP_SUMMARY"
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: gate
+    if: needs.gate.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,6 +78,13 @@ jobs:
           CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL || 'claude-opus-4-5' }}
           FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.force == 'true' && '1' || '' }}
         run: npm run build:data
+
+      - name: Verify data.json was written
+        run: |
+          if [ ! -s public/data.json ]; then
+            echo "::error::public/data.json was not written. Refusing to deploy."
+            exit 1
+          fi
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
