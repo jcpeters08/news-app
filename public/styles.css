@@ -93,8 +93,14 @@ a:hover { text-decoration: underline; }
 
 .weather-cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
+}
+@media (min-width: 540px) {
+  .weather-cards { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 900px) {
+  .weather-cards { grid-template-columns: 1fr 1fr 1fr; }
 }
 
 .weather-card {
@@ -262,6 +268,6 @@ a:hover { text-decoration: underline; }
       "weather weather weather"
       "politics medicineTech genai";
   }
-  .weather-cards { grid-template-columns: 1fr 1fr; max-width: 800px; }
+  .weather-cards { grid-template-columns: 1fr 1fr 1fr; }
   .header h1 { font-size: 32px; }
 }

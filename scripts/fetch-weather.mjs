@@ -9,6 +9,13 @@ export const CITIES = [
     timezone: 'America/Chicago',
   },
   {
+    id: 'mexico_city',
+    name: 'Mexico City',
+    lat: 19.4326,
+    lon: -99.1332,
+    timezone: 'America/Mexico_City',
+  },
+  {
     id: 'puerto_escondido',
     name: 'Puerto Escondido',
     lat: 15.8720,

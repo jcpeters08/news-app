@@ -62,6 +62,19 @@ describe('transformWeather', () => {
   });
 });
 
+describe('CITIES', () => {
+  it('includes Minneapolis, Mexico City, and Puerto Escondido', () => {
+    const ids = CITIES.map(c => c.id);
+    expect(ids).toEqual(['minneapolis', 'mexico_city', 'puerto_escondido']);
+  });
+  it('uses correct IANA timezones', () => {
+    const byId = Object.fromEntries(CITIES.map(c => [c.id, c]));
+    expect(byId.minneapolis.timezone).toBe('America/Chicago');
+    expect(byId.mexico_city.timezone).toBe('America/Mexico_City');
+    expect(byId.puerto_escondido.timezone).toBe('America/Mexico_City');
+  });
+});
+
 describe('fetchWeather (mocked)', () => {
   it('builds correct URL with timezone, units, and 7-day forecast', async () => {
     let calledUrl;
