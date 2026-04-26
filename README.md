@@ -1,15 +1,24 @@
 # Daily Brief
 
-Personal mobile-first dashboard with balanced news (politics + medicine/tech), GenAI tips for advanced Claude/ChatGPT users, and weather for Minneapolis & Puerto Escondido.
+Personal mobile-first dashboard with balanced news (US / Mexico / International), GenAI tips for advanced Claude/ChatGPT users, and weather for Minneapolis, Mexico City, and Puerto Escondido.
 
 **Live:** https://jcpeters08.github.io/news-app/
 
 ## How it works
 
 - A scheduled GitHub Action runs at exact 6:00am and 1:00pm America/Chicago, year-round (DST-safe — gating happens in the script, not the cron expression).
-- The Action fetches news from NewsAPI, GenAI items from a curated set of RSS feeds, and weather from Open-Meteo.
+- The Action fetches news from NewsAPI + a set of regional RSS feeds, GenAI items from a curated set of RSS feeds, and weather (incl. UV and Puerto Escondido tides) from Open-Meteo.
 - Output is written to `public/data.json` and deployed to GitHub Pages.
 - The static frontend (`public/`) reads `data.json` on load.
+
+The dashboard is tabbed:
+
+- **Always visible:** daily brief, weather (3 cities with UV index + Puerto Escondido tide chart), Medicine & Tech, GenAI strip.
+- **US tab:** US politics with AllSides-style bias badges.
+- **Mexico tab:** Politics & National / Culture & Travel / 🌴 Oaxaca Coast.
+- **International tab:** World Politics / General News / Travel & Style.
+
+The active tab is smart-detected on load: Mexico is the default when the browser is in a Mexican timezone, US otherwise.
 
 ## Setup (one time)
 
@@ -32,14 +41,15 @@ picks with no glosses.
 2. Settings → API Keys → Create Key.
 3. Add to repo: secret name `ANTHROPIC_API_KEY`.
 4. Optional: repository **variable** `CLAUDE_MODEL` (default `claude-opus-4-5`).
-   Set to `claude-haiku-4-5` for ~15× lower cost.
+   Set to `claude-haiku-4-5` for ~65× lower cost.
 
-Cost notes (twice-daily cron):
-- **Opus** (default): ~$10–15/month
-- **Haiku**: ~$0.30–1.20/month
+Cost notes (twice-daily cron, with the expanded tabbed feed set):
+- **Opus** (default): ~$20/month
+- **Haiku**: ~$0.30/month
 
-Curation preferences live in [scripts/prefs.js](scripts/prefs.js) — edit that
-file (no code changes elsewhere) to retune what Claude prioritizes.
+Curation preferences live in [scripts/prefs.js](scripts/prefs.js) — that's the
+single file to edit (no code changes elsewhere) to retune what Claude
+prioritizes across US, Mexico, International, Medicine & Tech, and GenAI.
 
 ### 2. Enable GitHub Pages
 
@@ -63,10 +73,13 @@ To override (e.g. you want a manual refresh): **Actions → Build & Deploy → R
 
 ## Data sources
 
-- **Politics:** NewsAPI top-headlines from a curated allowlist of left/center/right outlets, with AllSides-style lean badges.
+- **US politics:** NewsAPI top-headlines from a curated allowlist of left/center/right outlets, with AllSides-style lean badges.
 - **Medicine & Tech:** NewsAPI top-headlines from Reuters/AP/BBC/Verge/Ars/Wired/TechCrunch/MNT/etc.
+- **Mexico:** Mexico News Daily, NSS Oaxaca (Oaxaca-tagged stories boosted), La Jornada, Reforma, BBC Mundo.
+- **International — world politics & general news:** BBC News, The Guardian, Al Jazeera.
+- **International — travel & style:** Condé Nast Traveler, NYT Travel, Guardian Travel, GQ, Dezeen, Wallpaper\*.
 - **GenAI:** RSS from Anthropic, OpenAI, Simon Willison, Latent Space, and Hacker News (filtered for Claude/ChatGPT/LLM keywords).
-- **Weather:** Open-Meteo (no API key).
+- **Weather:** Open-Meteo forecast API (incl. UV index for all 3 cities) + Open-Meteo Marine API (tides for Puerto Escondido). No API key.
 
 ## Bias ratings
 
@@ -91,12 +104,16 @@ public/             # served by GitHub Pages
   manifest.webmanifest
   icon.svg
 scripts/
-  sources.js        # bias-rated source list + GenAI feeds
-  fetch-news.mjs
+  sources.js              # bias-rated source list + GenAI/Mexico/International feeds
+  prefs.js                # curation preferences (the file to edit to retune)
+  fetch-news.mjs          # NewsAPI: US politics + Medicine & Tech
+  fetch-mexico.mjs        # Mexico RSS feeds (incl. Oaxaca-priority boost)
+  fetch-international.mjs # International RSS feeds (world + travel/style)
   fetch-genai.mjs
-  fetch-weather.mjs
-  build-data.mjs    # orchestrator + DST-exact gating
-  serve.mjs         # local preview
+  fetch-weather.mjs       # 3-city forecast + UV + PE tides
+  claude-curator.mjs      # Anthropic-powered picking + glosses + daily brief
+  build-data.mjs          # orchestrator + DST-exact gating
+  serve.mjs               # local preview
 tests/              # vitest
 .github/workflows/
   build.yml         # cron + manual deploy
