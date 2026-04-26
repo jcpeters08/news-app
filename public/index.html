@@ -17,33 +17,76 @@
   </header>
 
   <main class="grid" id="dashboard">
-    <section class="brief" id="brief" aria-label="Daily brief" hidden>
+    <section class="brief" id="brief" hidden>
       <p id="brief-text"></p>
     </section>
 
-    <section class="weather" id="weather" aria-label="Weather">
-      <h2 class="visually-hidden">Weather</h2>
+    <section class="weather" aria-label="Weather">
       <div class="weather-cards" id="weather-cards"></div>
     </section>
 
-    <section class="col" data-cat="politics" aria-labelledby="h-politics">
-      <h2 id="h-politics">Politics</h2>
-      <ul class="stories" id="politics"></ul>
+    <section class="always-on" aria-label="Tech and science">
+      <p class="always-on-label">Tech &amp; Science · always visible</p>
+      <div class="col">
+        <h2>Medicine &amp; Tech <span class="count" id="count-medicineTech"></span></h2>
+        <ul class="stories" id="medicineTech"></ul>
+      </div>
+      <div class="col">
+        <h2>GenAI · Claude &amp; ChatGPT <span class="count" id="count-genai"></span></h2>
+        <ul class="stories" id="genai"></ul>
+      </div>
     </section>
 
-    <section class="col" data-cat="medicineTech" aria-labelledby="h-medtech">
-      <h2 id="h-medtech">Medicine &amp; Tech</h2>
-      <ul class="stories" id="medicineTech"></ul>
+    <nav class="tabs" role="tablist" aria-label="Region">
+      <button class="tab" role="tab" data-tab="us"   aria-selected="true">US</button>
+      <button class="tab" role="tab" data-tab="mx"   aria-selected="false">Mexico</button>
+      <button class="tab" role="tab" data-tab="intl" aria-selected="false">International</button>
+    </nav>
+
+    <section class="tab-pane" data-pane="us" role="tabpanel">
+      <div class="col">
+        <h2>US Politics <span class="count" id="count-us-politics"></span></h2>
+        <ul class="stories" id="us-politics"></ul>
+      </div>
     </section>
 
-    <section class="col" data-cat="genai" aria-labelledby="h-genai">
-      <h2 id="h-genai">GenAI · Claude &amp; ChatGPT</h2>
-      <ul class="stories" id="genai"></ul>
+    <section class="tab-pane" data-pane="mx" role="tabpanel" hidden>
+      <div class="section-grid">
+        <div class="col">
+          <h2>Politics &amp; National <span class="count" id="count-mx-politics"></span></h2>
+          <ul class="stories" id="mx-politics"></ul>
+        </div>
+        <div class="col">
+          <h2>Culture &amp; Travel <span class="count" id="count-mx-culture"></span></h2>
+          <ul class="stories" id="mx-culture"></ul>
+        </div>
+        <div class="col">
+          <h2>🌴 Oaxaca Coast <span class="count" id="count-mx-oaxaca"></span></h2>
+          <ul class="stories" id="mx-oaxaca"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-pane" data-pane="intl" role="tabpanel" hidden>
+      <div class="section-grid">
+        <div class="col">
+          <h2>World Politics <span class="count" id="count-intl-politics"></span></h2>
+          <ul class="stories" id="intl-politics"></ul>
+        </div>
+        <div class="col">
+          <h2>General News <span class="count" id="count-intl-general"></span></h2>
+          <ul class="stories" id="intl-general"></ul>
+        </div>
+        <div class="col">
+          <h2>Travel &amp; Style <span class="count" id="count-intl-travel"></span></h2>
+          <ul class="stories" id="intl-travel"></ul>
+        </div>
+      </div>
     </section>
   </main>
 
   <footer class="footer">
-    <p>News from a balanced mix of sources. Lean ratings adapted from <a href="https://www.allsides.com/media-bias/ratings" target="_blank" rel="noopener">AllSides</a>. Weather from <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>.</p>
+    <p>Balanced news mix with AllSides-rated lean badges. Mexico via curated feeds (incl. NSS Oaxaca). International via BBC, Guardian, Al Jazeera, CN Traveler, GQ, Dezeen. Weather via <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo</a>. Curation by Claude.</p>
   </footer>
 
   <script src="app.js"></script>

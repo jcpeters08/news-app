@@ -106,6 +106,25 @@ export const MEXICO_FEEDS = [
   { url: 'https://feeds.bbci.co.uk/mundo/rss.xml',      source: 'BBC Mundo',         language: 'es', weight: 8  },
 ];
 
+// International world-news feeds. Mix of UK/EU + global outlets to get
+// non-US-centric world coverage. Curator buckets each story into either
+// world-politics or general-news.
+export const INTL_WORLD_FEEDS = [
+  { url: 'https://feeds.bbci.co.uk/news/world/rss.xml',     source: 'BBC News',    weight: 10 },
+  { url: 'https://www.theguardian.com/world/rss',           source: 'The Guardian',weight: 9  },
+  { url: 'https://www.aljazeera.com/xml/rss/all.xml',       source: 'Al Jazeera',  weight: 8  },
+];
+
+// International travel + style + design feeds. Verified reachable 2026-04-25.
+export const INTL_TRAVEL_STYLE_FEEDS = [
+  { url: 'https://www.cntraveler.com/feed/rss',                           source: 'Condé Nast Traveler', kind: 'travel', weight: 11 },
+  { url: 'https://www.nytimes.com/services/xml/rss/nyt/Travel.xml',       source: 'NYT Travel',          kind: 'travel', weight: 10 },
+  { url: 'https://www.theguardian.com/travel/rss',                        source: 'Guardian Travel',     kind: 'travel', weight: 9  },
+  { url: 'https://www.gq.com/feed/rss',                                   source: 'GQ',                  kind: 'style',  weight: 9  },
+  { url: 'https://www.dezeen.com/feed/',                                  source: 'Dezeen',              kind: 'design', weight: 10 },
+  { url: 'https://www.wallpaper.com/rss',                                 source: 'Wallpaper*',          kind: 'design', weight: 8  },
+];
+
 export const GENAI_KEYWORDS = [
   'claude', 'anthropic', 'chatgpt', 'openai', 'gpt-4', 'gpt-5', 'o1', 'o3',
   'llm', 'mcp', 'prompt', 'agent', 'rag', 'tool use', 'function calling',
