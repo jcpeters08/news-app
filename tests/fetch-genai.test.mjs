@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { fetchGenAI, parseFeed, hasKeyword, pickTopGenAI, tipScore } from '../scripts/fetch-genai.mjs';
+import { fetchGenAI, parseFeed, hasKeyword, pickTopGenAI, tipScore, decodeHtmlEntities } from '../scripts/fetch-genai.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -102,6 +102,34 @@ describe('fetchGenAI ranks tip content above announcements', () => {
       feeds: [{ url: 'https://x.test/rss', source: 'Mixed', weight: 5 }],
     });
     expect(items[0].url).toBe('https://x/tip');
+  });
+});
+
+describe('decodeHtmlEntities', () => {
+  it('decodes numeric decimal entities (&#8217;)', () => {
+    expect(decodeHtmlEntities('Mexico&#8217;s week in review')).toBe('Mexico’s week in review');
+  });
+  it('decodes &amp;', () => {
+    expect(decodeHtmlEntities('AT&amp;T')).toBe('AT&T');
+  });
+  it('decodes hex numeric entities (&#x27;)', () => {
+    expect(decodeHtmlEntities('it&#x27;s')).toBe("it's");
+  });
+  it('decodes &nbsp; to a space', () => {
+    expect(decodeHtmlEntities('a&nbsp;b')).toBe('a b');
+  });
+  it('decodes &lt;', () => {
+    expect(decodeHtmlEntities('1 &lt; 2')).toBe('1 < 2');
+  });
+  it('leaves entity-free strings unchanged', () => {
+    expect(decodeHtmlEntities('plain text, no entities')).toBe('plain text, no entities');
+  });
+  it('decoded titles flow through parseFeed', () => {
+    const xml = `<?xml version="1.0"?><rss version="2.0"><channel>
+      <item><title>Mexico&amp;#8217;s week</title><link>https://x/1</link><pubDate>Mon, 01 Jan 2024 00:00:00 GMT</pubDate></item>
+    </channel></rss>`;
+    const items = parseFeed(xml);
+    expect(items[0].title).toBe('Mexico’s week');
   });
 });
 

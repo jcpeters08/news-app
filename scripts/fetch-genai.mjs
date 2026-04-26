@@ -113,7 +113,36 @@ function parseDate(d) {
 function cleanText(s) {
   if (!s) return '';
   if (typeof s !== 'string') s = String(s);
-  return s.trim();
+  return decodeHtmlEntities(s).trim();
+}
+
+const NAMED_ENTITIES = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+};
+
+export function decodeHtmlEntities(s) {
+  if (s == null) return s;
+  if (typeof s !== 'string') s = String(s);
+  return s.replace(/&(#x[0-9a-fA-F]+|#[0-9]+|[a-zA-Z]+);/g, (match, body) => {
+    if (body[0] === '#') {
+      const code = body[1] === 'x' || body[1] === 'X'
+        ? parseInt(body.slice(2), 16)
+        : parseInt(body.slice(1), 10);
+      if (!Number.isFinite(code) || code < 0 || code > 0x10ffff) return match;
+      try {
+        return String.fromCodePoint(code);
+      } catch {
+        return match;
+      }
+    }
+    const named = NAMED_ENTITIES[body.toLowerCase()];
+    return named !== undefined ? named : match;
+  });
 }
 
 function stripHtml(s) {
