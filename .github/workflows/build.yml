@@ -11,7 +11,15 @@ name: Build & Deploy
 #   19:00 UTC = 1pm CST (Nov–Mar) — RUN
 on:
   schedule:
-    - cron: '0 11,12,18,19 * * *'
+    # Wide net to absorb GitHub Actions cron drift (often 15+ min late, sometimes
+    # whole hours dropped under load). Targets: 6am and 1pm America/Chicago, both
+    # DST states. The gate widens to a 2-hour window per target and the build
+    # script's idempotency check skips runs that follow a recent successful build,
+    # so we get redundancy without double-running.
+    #
+    #   CDT (UTC-5): 6am=11Z, 1pm=18Z   |   CST (UTC-6): 6am=12Z, 1pm=19Z
+    #   Window each side adds the next hour to absorb drift.
+    - cron: '0 11,12,13,18,19,20 * * *'
   workflow_dispatch:
     inputs:
       force:
@@ -50,10 +58,12 @@ jobs:
           fi
           h=$(TZ=America/Chicago date +%H)
           echo "Chicago hour: $h"
-          if [ "$h" = "06" ] || [ "$h" = "13" ]; then
+          # 2-hour windows per target absorb GitHub Actions cron drift.
+          # Build script runs an idempotency check so we don't double-build.
+          if [ "$h" = "06" ] || [ "$h" = "07" ] || [ "$h" = "13" ] || [ "$h" = "14" ]; then
             echo "should_run=true" >> "$GITHUB_OUTPUT"
           else
-            echo "should_run=false  (skipping — not 6am or 1pm Chicago)" >> "$GITHUB_STEP_SUMMARY"
+            echo "should_run=false  (skipping — outside 6–7am or 1–2pm Chicago window)" >> "$GITHUB_STEP_SUMMARY"
             echo "should_run=false" >> "$GITHUB_OUTPUT"
           fi
 

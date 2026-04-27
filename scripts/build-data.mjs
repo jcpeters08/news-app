@@ -36,17 +36,52 @@ export function chicagoHour(now = new Date()) {
   return h === 24 ? 0 : h;
 }
 
+// Two-hour windows per target absorb GitHub Actions cron drift, which is
+// often 15+ min late and sometimes whole hours under load. The idempotency
+// check (recentBuildExists) prevents double-runs when both hours fire.
+const TARGET_HOURS = new Set([6, 7, 13, 14]);
+
 export function shouldRun(now = new Date(), env = process.env) {
   if (env.FORCE_RUN === '1') return true;
-  const h = chicagoHour(now);
-  return h === 6 || h === 13;
+  return TARGET_HOURS.has(chicagoHour(now));
+}
+
+const RECENT_BUILD_MS = 90 * 60 * 1000; // 90 minutes
+
+// Idempotency check: fetch the live data.json and look at generatedAt.
+// If the previous successful build was within the last 90 minutes, skip —
+// this is the second cron in the window firing after the first one already
+// did the work. Network errors mean we have no idea, so we proceed (better
+// to risk a redundant build than to skip the only chance to update).
+export async function recentBuildExists({
+  url = 'https://jcpeters08.github.io/news-app/data.json',
+  now = new Date(),
+  fetchImpl = fetch,
+} = {}) {
+  try {
+    const res = await fetchImpl(url, { cache: 'no-store' });
+    if (!res.ok) return false;
+    const json = await res.json();
+    const t = new Date(json.generatedAt).getTime();
+    if (!Number.isFinite(t)) return false;
+    return (now.getTime() - t) < RECENT_BUILD_MS;
+  } catch {
+    return false;
+  }
 }
 
 async function main() {
   const now = new Date();
 
   if (!shouldRun(now)) {
-    console.log(`[skip] Chicago hour is ${chicagoHour(now)}, not 6 or 13. FORCE_RUN=1 to override.`);
+    console.log(`[skip] Chicago hour is ${chicagoHour(now)}, outside 6–7am / 1–2pm window. FORCE_RUN=1 to override.`);
+    process.exit(0);
+  }
+
+  // Idempotency: if a successful build wrote data.json within the last 90
+  // minutes, the previous cron already did the work. Skip.
+  if (process.env.FORCE_RUN !== '1' && await recentBuildExists({ now })) {
+    console.log('[skip] live data.json was generated within the last 90 minutes; this run is redundant.');
     process.exit(0);
   }
 
