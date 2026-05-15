@@ -71,6 +71,8 @@ jobs:
     needs: gate
     if: needs.gate.outputs.should_run == 'true'
     runs-on: ubuntu-latest
+    outputs:
+      has_data: ${{ steps.build.outputs.has_data }}
     steps:
       - uses: actions/checkout@v4
 
@@ -81,28 +83,38 @@ jobs:
 
       - run: npm ci
 
-      - name: Generate data.json
+      # The script exits 0 on intentional skips (idempotency: a recent build
+      # already wrote data.json upstream). In that case data.json is absent
+      # here and we want a GREEN build that simply doesn't deploy — not a red
+      # failure. Real errors (missing key, total fetch failure) still surface
+      # as non-zero exit codes and fail this step naturally.
+      - id: build
+        name: Generate data.json
         env:
           NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL || 'claude-opus-4-5' }}
           FORCE_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.force == 'true' && '1' || '' }}
-        run: npm run build:data
-
-      - name: Verify data.json was written
         run: |
-          if [ ! -s public/data.json ]; then
-            echo "::error::public/data.json was not written. Refusing to deploy."
-            exit 1
+          npm run build:data
+          if [ -s public/data.json ]; then
+            echo "has_data=true" >> "$GITHUB_OUTPUT"
+            echo "Built fresh data.json — will deploy." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "has_data=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Build script intentionally skipped (idempotent — recent build already deployed). Not redeploying."
+            echo "Skipped (idempotent). Pages keeps the previous deploy." >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Upload Pages artifact
+        if: steps.build.outputs.has_data == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
 
   deploy:
     needs: build
+    if: needs.build.outputs.has_data == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
